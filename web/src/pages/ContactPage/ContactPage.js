@@ -3,10 +3,12 @@ import { toast, Toaster } from '@redwoodjs/web/toast'
 import {
   FieldError,
   Form,
+  FormError,
   Label,
   TextField,
   TextAreaField,
   Submit,
+  useForm,
 } from '@redwoodjs/forms'
 
 const CREATE_CONTACT = gql`
@@ -18,9 +20,11 @@ const CREATE_CONTACT = gql`
 `
 
 const ContactPage = () => {
-  const [create, { loading }] = useMutation(CREATE_CONTACT, {
+  const formMethods = useForm({ mode: 'onBlur' })
+  const [create, { loading, error }] = useMutation(CREATE_CONTACT, {
     onCompleted: () => {
       toast.success('Successfully submitted.')
+      formMethods.reset()
     },
   })
 
@@ -33,7 +37,15 @@ const ContactPage = () => {
       <Toaster />
       <h1>Contact</h1>
 
-      <Form onSubmit={onSubmit} config={{ mode: 'onBlur' }}>
+      <Form
+        onSubmit={onSubmit}
+        config={{ mode: 'onBlur' }}
+        error={error}
+        formMethods={formMethods}
+      >
+        {/* FormError is a Service validation */}
+        <FormError error={error} wrapperClassName="form-error" />
+
         <Label name="name" errorClassName="error">
           Name
         </Label>
