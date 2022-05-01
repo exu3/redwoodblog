@@ -45,7 +45,7 @@ export const handler = async (event, context) => {
     // by the `logIn()` function from `useAuth()` in the form of:
     // `{ message: 'Error message' }`
     handler: (user) => {
-      return user
+      return false // return false, instead of creating a user to prevent signup through API
     },
 
     errors: {
